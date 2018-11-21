@@ -7,7 +7,7 @@ import os.path
 
 def gutToText(number,name):
     filename = name+"_raw.txt"
-    if os.path.isfile(filename)==Fale:
+    if os.path.isfile(filename)==False:
         book = open(filename,"w")
         text = strip_headers(load_etext(number)).strip()
         words = text
