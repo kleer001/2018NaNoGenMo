@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import copy
 import random
 import pycorpora as pyc
 
@@ -31,6 +32,7 @@ science = pyc.science
 myth = pyc.mythology
 words = pyc.words
 
+
 #/ means use the deepSample funciton
 
 #piles
@@ -52,8 +54,8 @@ weather = science.weather_conditions["conditions"]
 
 diagnosis = medical.diagnoses["codes"] # /desc
 #explicity because the corpus is broke, sadface.jpg
-bodilyfluid = [ "amniotic fluid", "aqueous humour", "vitreous humour", "bile", "blood", "blood serum", "cerebrospinal fluid", "cerumen", "earwax", "chyle", "chyme", "endolymph", "perilymph", "gastric acid", "gastric juice", "lymph", "mucus", "pericardial fluid", "peritoneal fluid", "pleural fluid", "pus", "rheum", "saliva", "sebum", "sputum", "synovial fluid", "sweat", "tears", "vomit" ]
-bodypart = human.bodyParts["bodyParts"]
+bodilyfluids = [ "amniotic fluid", "aqueous humour", "vitreous humour", "bile", "blood", "blood serum", "cerebrospinal fluid", "cerumen", "earwax", "chyle", "chyme", "endolymph", "perilymph", "gastric acid", "gastric juice", "lymph", "mucus", "pericardial fluid", "peritoneal fluid", "pleural fluid", "pus", "rheum", "saliva", "sebum", "sputum", "synovial fluid", "sweat", "tears", "vomit" ]
+bodyparts = human.bodyParts["bodyParts"]
 
 colors = color.paints["colors"] # /color
 
@@ -70,6 +72,7 @@ objects = objects.objects["objects"]
 appliances = tech.appliances["appliances"]
 knots = tech.knots["knots"]
 guns = tech.guns_n_rifles["weapons"]
+foods = foods.menuItems["menuItems"]
 
 horses = animals.horses["horses"]
 donkeys = animals.donkeys["donkeys"]
@@ -126,7 +129,7 @@ supplies = [] #clothes, gun, objects, appliance, knot
 places = [] #rivers, cities, seas
 interst = [] #plants, color-flowers
 injuries = [] #color-body part, color-bodily fluid
-quotes = [] # oprah_quotes & proverbs
+quotePile = [] # oprah_quotes & proverbs
 dreams = [] # monsters, lovecraftgods, lovecraftmonsters
 prayers = [] #greekgods
 
@@ -134,20 +137,20 @@ totalmix = 3
 
 #bucket of things centric dictionary
 tempdict.clear()
-tempdict["gear"]=random.sample(objects,totalmix)
-tempdict["clothing"]=random.sample(clothes,totalmix)
-tempdict["gun"]=random.sample(guns,totalmix)
-tempdict["appliance"]=random.sample(appliances,totalmix)
-tempdict["knot"]=random.sample(knots,totalmix)
+tempdict["gear"]=random.sample(objects,3)
+tempdict["clothing"]=random.sample(clothes,5)
+tempdict["gun"]=random.sample(guns,1)
+tempdict["appliance"]=random.sample(appliances,2)
 supplies.append(dict(tempdict))
 
 #person centric dictionary
-relate = [makeRelative() for a in range(totalmix)]
-name = random.sample(firstnames,totalmix)
-famname = random.sample(lastnames,totalmix)
-occupation = random.sample(occupations, totalmix)
-nickname = random.sample(wrestlers, totalmix)
-realname = deepsample(richpeople,"name",totalmix)
+totalPop = 20
+relate = [makeRelative() for a in range(totalPop)]
+name = random.sample(firstnames,totalPop)
+famname = random.sample(lastnames,totalPop)
+occupation = random.sample(occupations, totalPop)
+nickname = random.sample(wrestlers, totalPop)
+realname = deepsample(richpeople,"name",totalPop)
 tempdict.clear()
 
 for a,b,c,d,e,f in zip(relate, name, famname,occupation,nickname,realname):
@@ -157,8 +160,11 @@ for a,b,c,d,e,f in zip(relate, name, famname,occupation,nickname,realname):
     tempdict["occupation"] = d
     tempdict["nickname"] = e
     tempdict["realname"] = f
+    tempdict["meeting"] = 0
     dramatasPersonae.append(dict(tempdict))
     #print "My %s %s %s is a %s. They love %s and dream of %s sometimes." % (a,b,c,d,e,f)
+
+#print dramatasPersonae
 
 tempdict.clear()
 tempdict["seanames"] = [s['name'] for s in random.sample(seas,totalmix)]
