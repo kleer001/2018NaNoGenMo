@@ -27,7 +27,7 @@ class Protagonist:
             self.states["is"+eachState]=False
             self.states["was"+eachState]=False
 
-        self.inventory = []
+        self.inventory = {}
         self.time = 0
         self.stateChange = []
 
@@ -46,13 +46,13 @@ class Protagonist:
         self.isSleeping = False
 
         self.stateList = ['Curious','Injured','Tired','Camping','Moving','Eating',
-        'Adrenaline','Storytelling','SettingUpCamp','WithFriends','Scared']
+        'Adrenaline','Storytelling','SettingUpCamp','WithFriends','Scared','Sleeping']
         self.states = dict()
         for eachState in self.stateList:
             self.states["is"+eachState]=False
             self.states["was"+eachState]=False
 
-        self.inventory = []
+        self.inventory = {}
         self.time = 0
         self.stateChange = []
 
@@ -62,6 +62,8 @@ class Protagonist:
                 if self.states.get("is"+eachState) and not self.states.get("was"+eachState):
                     self.states["was"+eachState] = True
                     self.changes.append(eachState)
+                if not self.states.get("is"+eachState) and self.states.get("was"+eachState):
+                    self.states["was"+eachState] = False
         return self.changes
 
     def probable(self,value=0,atOne=0, atZero=1000):
@@ -80,7 +82,7 @@ class Protagonist:
             self.stateChange += "dead"
             return self.stateChange
         #if you're sleeping you're not doing anything else
-        if self.isSleeping:
+        if self.states.get("isSleeping"):
             self.health += 2
             self.vigor += 2
             self.fear = 0
@@ -88,7 +90,7 @@ class Protagonist:
             self.curiosity = self.maxScale/2
             self.stateChange += "sleeping"
 
-        if not self.isSleeping:
+        if not self.states.get("isSleeping"):
             #basic meter relationships
             if self.health < self.maxScale/5:
                 self.fear += 1 #20% near death fear

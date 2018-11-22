@@ -3,13 +3,15 @@
 from landscape import *
 from gui import *
 from persona import *
-from nouns import *
+#from nouns import *
 import random
 from collections import deque
 import string
 import os
+import time 
+import copy
 
-import pdb
+#import pdb
 
 alookup ={
         "isInjured":["Your got injured very badly, it hurts. ","You got hurt and you're in a lot of pain. "],
@@ -39,6 +41,8 @@ supplies = {
         "some strawberries","some blueberries", "a sandwich","a leg of lamb" ]
     }
 
+backupSupplies = supplies
+
 def newDayMix(main,mixin,ratio):
     newMix = {}
     for x, y in main.items():
@@ -49,16 +53,22 @@ def newDayMix(main,mixin,ratio):
     return newMix
 
 bookLength = 0
-bookFinalSize = 2000
+bookFinalSize = 50000
 incarnation = 0
 
-main = MainWindow()
+gui = False
 
-bookName = "ThePilgramage.txt"
+if gui: main = MainWindow()
 
-f = os.open(bookName, os.O_RDWR|os.O_CREAT ) #Create the file
-os.write(f, " \"The Pilgramage\" \n\n")
-os.close(f)
+i = 0
+while os.path.exists("ThePilgramage_%s.txt" % i):
+    i += 1
+
+bookName = "ThePilgramage_%s.txt" % i
+
+#f = os.open(bookName, os.O_RDWR|os.O_CREAT ) #Create the file
+#os.write(f, " \"The Pilgramage\" \n\n")
+#os.close(f)
 
 def updateBook(stringToWrite):
     f = open(bookName,"a+" ) #append the file
@@ -70,14 +80,15 @@ def updateBook(stringToWrite):
 
 while bookLength < bookFinalSize:
     #incarnation begin
-
+    time.sleep(2)
     englishActivity = ""
     world = landscape()
 
     bob = Protagonist()
     bob.initialize()
 
-    bob.inventory = supplies
+    bob.inventory.clear()
+    bob.inventory = copy.deepcopy(supplies)
 
     statuses = ""
 
@@ -87,21 +98,21 @@ while bookLength < bookFinalSize:
 
     incarnation += 1
     printIncarnation = "\n\n Incarnation # %s \n\n" % (incarnation)
-
-#    pdb.set_trace()
-
+    #pdb.set_trace()
     bookLength += updateBook(printIncarnation)
+    print printIncarnation
     alive = True
 
     while alive:
         #setup the new day's list of activities
-        specificDay = newDayMix(dayLike,randomEvent,5)
+        specificDay = newDayMix(dayLike,randomEvent,10)
+        #pdb.set_trace()
 
         if newDistance > 0:
             totalDistance = (newDistance - oldDistance)/10
             if totalDistance == 0 and dayNumber > 2:
                 printDeath = "\nYou went 0 miles on day %d. You were dead." % (dayNumber)
-                print printDeath
+                #print printDeath
                 bookLength += updateBook(printDeath)
                 alive = False
                 break
@@ -116,12 +127,10 @@ while bookLength < bookFinalSize:
                     daysEvents += "You feel like you're missing something else.'"
 
             printDaysEvents = "\n"+dayDistance + daysEvents+"\n"
-            print printDaysEvents
+            #print printDaysEvents
             bookLength += updateBook(printDaysEvents)
             oldDistance = newDistance
         daysEvents = ""
-
-        print "today is %s" % (specificDay)
 
         for activity in specificDay:
             variation = random.randint(1,100)
@@ -138,12 +147,12 @@ while bookLength < bookFinalSize:
                     bob.inventory.get("food","").remove(itemToEat)
                     willBeFull = bob.satiety + 7*(specificDay[activity]+variation)
                     if willBeFull >= bob.maxScale:
-                        englishActivity += " and felt full. "
+                        englishActivity += " and you felt full. "
                     else:
                         englishActivity += " but you still felt hungry. "
                 else:
-                    englishActivity += "You were hungry but had no food left."
-                    break
+                    englishActivity += " nothing, no food left."
+                    bob.states["isEating"]=False
 
             daysEvents += englishActivity
             statuses += englishActivity + "\n"
@@ -151,22 +160,22 @@ while bookLength < bookFinalSize:
 
             if len(allStatus) > 8: deque.popleft(allStatus)
             statuses = string.join(allStatus,"\n")
-            main.setStatus(statusString=statuses)
-            main.update()
+            if gui: main.setStatus(statusString=statuses)
+            if gui: main.update()
 
             for atime in range(specificDay[activity]+variation):
-                main.setTime(timeString=str(bob.time))
+                if gui: main.setTime(timeString=str(bob.time))
                 bobStatus = bob.update()
                 statesUpdate = bob.updateStates()
-                if len(statesUpdate): print statesUpdate
-                main.set(healthSet=bob.health, vigorSet=bob.vigor,satietySet=bob.satiety,
+                if gui: main.set(healthSet=bob.health, vigorSet=bob.vigor,satietySet=bob.satiety,
                     fearSet=bob.fear,curiousSet=bob.curiosity,distanceSet=bob.distance)
                 #time.sleep(0.05)
-                main.update()
+                if gui: main.update()
             statusUpdate = "bob.states[\""+activity + "\"]=False"
             exec(statusUpdate)
             #if bob.isCurious: null
         newDistance = bob.distance
         dayNumber += 1
 
+print "BOOK DONE"
 
