@@ -31,6 +31,8 @@ science = pyc.science
 myth = pyc.mythology
 words = pyc.words
 
+#/ means use the deepSample funciton
+
 #piles
 proverbs = words.proverbs["proverbs"]
 #/Friendship /Love /Relationships /Life /Health & Food  /Converation
@@ -113,29 +115,6 @@ def makeRelative():
         makeRelation += rshipsEnd + " "
     return makeRelation[:-1] #take off trailing space
 
-
-""" #mix and match code
------------------------------ moar ---------------
-"""
-
-"""
-
-totalpeeps = 15
-prefix = random.sample(prefixes,totalpeeps)
-name = random.sample(firstnames,totalpeeps)
-famname = random.sample(lastnames,totalpeeps)
-occupation = random.sample(occupations, totalpeeps)
-
-animal = random.sample(animals,totalpeeps)
-
-for person in zip(name,famname,occupation,animal):
-    dramatasPersonae.append(" ".join(person))
-
-for n in dramatasPersonae:
-    print makeRelative() + n
-
-"""
-
 def deepsample(corpora,cdict,number):
     return [s[cdict] for s in random.sample(corpora,number)]
 
@@ -161,7 +140,6 @@ tempdict["gun"]=random.sample(guns,totalmix)
 tempdict["appliance"]=random.sample(appliances,totalmix)
 tempdict["knot"]=random.sample(knots,totalmix)
 supplies.append(dict(tempdict))
-print supplies
 
 #person centric dictionary
 relate = [makeRelative() for a in range(totalmix)]
@@ -171,6 +149,7 @@ occupation = random.sample(occupations, totalmix)
 nickname = random.sample(wrestlers, totalmix)
 realname = deepsample(richpeople,"name",totalmix)
 tempdict.clear()
+
 for a,b,c,d,e,f in zip(relate, name, famname,occupation,nickname,realname):
     tempdict["relate"]=a
     tempdict["name"] = b
@@ -180,12 +159,10 @@ for a,b,c,d,e,f in zip(relate, name, famname,occupation,nickname,realname):
     tempdict["realname"] = f
     dramatasPersonae.append(dict(tempdict))
     #print "My %s %s %s is a %s. They love %s and dream of %s sometimes." % (a,b,c,d,e,f)
-print dramatasPersonae
 
 tempdict.clear()
 tempdict["seanames"] = [s['name'] for s in random.sample(seas,totalmix)]
 tempdict["rivernames"] = [s['name'] for s in random.sample(rivers,totalmix)]
 tempdict["citynames"] = [s['city'] for s in random.sample(cities,totalmix)]
 places.append(dict(tempdict))
-print places
 
