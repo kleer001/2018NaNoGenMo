@@ -216,7 +216,12 @@ while bookLength < bookFinalSize:
                     else:
                         englishActivity += " but you still felt hungry. "
                 else:
-                    englishActivity += "nothing, no food was left. "
+                    englishActivity += "nothing. "
+                    if(random.randrange(4)):
+                        englishActivity += "No food was left. " 
+                    if(random.randrange(6)):
+                        englishActivity += "Not a crumb. " 
+                    
                     bob.states["isEating"]=False
 
             daysEvents += englishActivity
