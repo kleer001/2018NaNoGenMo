@@ -15,7 +15,7 @@ class Protagonist:
         self.satiety = self.maxScale
         self.fear = 0
         self.curiosity = self.maxScale/2
-        self.speed = 1.0
+        self.speed = 0.02
         self.distance = 0.0
         self.isDead = False
         self.isSleeping = False
@@ -40,7 +40,7 @@ class Protagonist:
         self.satiety = self.maxScale
         self.fear = 0
         self.curiosity = self.maxScale/2
-        self.speed = 1.0
+        self.speed = 0.02
         self.distance = 0.0
         self.isDead = False
         self.isSleeping = False
@@ -99,7 +99,7 @@ class Protagonist:
                 self.states["isTired"] = True
             if self.health == self.maxScale: self.curiosity += 3
             if self.health < (self.healthMax/5): self.fear += 5 #near death
-            self.speed = float(self.health)/float(self.maxScale)
+            #self.speed = float(self.health)/float(self.maxScale)
             if self.satiety == 0: self.vigor -= 1
             if self.fear == 0:
                 self.curiosity += 1
@@ -124,7 +124,7 @@ class Protagonist:
                 self.fear += 250
                 self.satiety += 250
                 self.health += 250
-                self.speed += 1
+                self.speed += .005
             if self.states.get("isMoving"):
                 self.distance += self.speed
                 self.satiety -= 2
